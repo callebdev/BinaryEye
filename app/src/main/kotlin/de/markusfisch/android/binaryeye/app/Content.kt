@@ -2,9 +2,9 @@ package de.markusfisch.android.binaryeye.app
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AlertDialog
 import android.view.View
 import de.markusfisch.android.binaryeye.R
 import kotlinx.coroutines.Dispatchers
@@ -12,18 +12,24 @@ import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-fun setFragment(fm: FragmentManager?, fragment: Fragment) {
+fun setFragment(
+	fm: androidx.fragment.app.FragmentManager?,
+	fragment: androidx.fragment.app.Fragment
+) {
 	fm?.let { getTransaction(fm, fragment).commit() }
 }
 
-fun addFragment(fm: FragmentManager?, fragment: Fragment) {
+fun addFragment(
+	fm: androidx.fragment.app.FragmentManager?,
+	fragment: androidx.fragment.app.Fragment
+) {
 	fm?.let { getTransaction(fm, fragment).addToBackStack(null).commit() }
 }
 
 @SuppressLint("CommitTransaction")
 private fun getTransaction(
-	fm: FragmentManager,
-	fragment: Fragment
+	fm: androidx.fragment.app.FragmentManager,
+	fragment: androidx.fragment.app.Fragment
 ) = fm.beginTransaction().replace(R.id.content_frame, fragment)
 
 suspend inline fun View.useVisibility(

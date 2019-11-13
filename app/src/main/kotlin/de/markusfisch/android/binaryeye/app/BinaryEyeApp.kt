@@ -1,7 +1,7 @@
 package de.markusfisch.android.binaryeye.app
 
 import android.app.Application
-import android.support.v8.renderscript.RenderScript
+import androidx.renderscript.RenderScript
 import de.markusfisch.android.binaryeye.preference.Preferences
 import de.markusfisch.android.binaryeye.repository.DatabaseRepository
 

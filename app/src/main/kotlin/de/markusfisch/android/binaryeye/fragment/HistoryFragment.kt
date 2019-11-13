@@ -3,9 +3,8 @@ package de.markusfisch.android.binaryeye.fragment
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.WorkerThread
-import android.support.v4.app.Fragment
-import android.support.v7.widget.SwitchCompat
+import androidx.annotation.WorkerThread
+import androidx.appcompat.widget.SwitchCompat
 import android.view.*
 import android.widget.ListView
 import android.widget.Toast
@@ -20,7 +19,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.mapNotNull
 
-class HistoryFragment : Fragment() {
+class HistoryFragment : androidx.fragment.app.Fragment() {
 	private lateinit var listView: ListView
 	private lateinit var fab: View
 	private lateinit var progressView: View
@@ -80,7 +79,8 @@ class HistoryFragment : Fragment() {
 
 	override fun onResume() {
 		super.onResume()
-		update(context)
+		val ctx = context ?: return
+		update(ctx)
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -88,13 +88,14 @@ class HistoryFragment : Fragment() {
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		val ctx = context ?: return super.onOptionsItemSelected(item)
 		return when (item.itemId) {
 			R.id.clear -> {
-				askToRemoveAllScans(context)
+				askToRemoveAllScans(ctx)
 				true
 			}
 			R.id.export_history -> {
-				askToExportToFile(context)
+				askToExportToFile(ctx)
 				true
 			}
 			else -> super.onOptionsItemSelected(item)
@@ -173,7 +174,8 @@ class HistoryFragment : Fragment() {
 
 	private fun askToExportToFile(context: Context) = scope.launch {
 		progressView.useVisibility {
-			if (!hasWritePermission(activity)) {
+			val ac = activity ?: return@useVisibility
+			if (!hasWritePermission(ac)) {
 				return@useVisibility
 			}
 			val (getBinaries, scans) = getScans {
@@ -201,7 +203,7 @@ class HistoryFragment : Fragment() {
 				}
 			} ?: return@useVisibility
 			val name = withContext(Dispatchers.Main) {
-				activity.askForFileName(suffix = "csv")
+				ac.askForFileName(suffix = "csv")
 			} ?: return@useVisibility
 			val csv = scans.toCSV(delimiter, getBinaries)
 			val toastMessage = csv.writeToFile(name)
@@ -262,7 +264,10 @@ class HistoryFragment : Fragment() {
 				}
 				val text = sb.toString()
 				if (text.isNotEmpty()) withContext(Dispatchers.Main) {
-					shareText(context, text)
+					val ctx = context
+					ctx?.let {
+						shareText(ctx, text)
+					}
 				}
 			}
 		}

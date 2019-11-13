@@ -2,7 +2,7 @@ package de.markusfisch.android.binaryeye.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import com.google.zxing.BarcodeFormat
 import de.markusfisch.android.binaryeye.R
 import de.markusfisch.android.binaryeye.app.addFragment
 
-class EncodeFragment : Fragment() {
+class EncodeFragment : androidx.fragment.app.Fragment() {
 	private lateinit var formatView: Spinner
 	private lateinit var sizeView: TextView
 	private lateinit var sizeBarView: SeekBar

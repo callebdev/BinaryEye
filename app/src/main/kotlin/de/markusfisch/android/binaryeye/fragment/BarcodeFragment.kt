@@ -5,7 +5,7 @@ import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Environment
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
@@ -23,7 +23,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class BarcodeFragment : Fragment() {
+class BarcodeFragment : androidx.fragment.app.Fragment() {
 	private var barcode: Bitmap? = null
 
 	override fun onCreate(state: Bundle?) {
@@ -56,7 +56,7 @@ class BarcodeFragment : Fragment() {
 				message = getString(R.string.error_encoding_barcode)
 			}
 			Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-			fragmentManager.popBackStack()
+			fragmentManager?.popBackStack()
 			return null
 		}
 		view.findViewById<ImageView>(R.id.barcode).setImageBitmap(barcode)
@@ -139,15 +139,16 @@ class BarcodeFragment : Fragment() {
 	}
 
 	private fun share(bitmap: Bitmap) {
+		val ctx = context ?: return
 		GlobalScope.launch {
 			val file = File(
-				context.externalCacheDir,
+				ctx.externalCacheDir,
 				"shared_barcode.png"
 			)
 			val success = saveBitmap(bitmap, file)
 			GlobalScope.launch(Main) {
 				if (success) {
-					shareFile(context, file, "image/png")
+					shareFile(ctx, file, "image/png")
 				} else {
 					val ac = activity
 					ac?.let {

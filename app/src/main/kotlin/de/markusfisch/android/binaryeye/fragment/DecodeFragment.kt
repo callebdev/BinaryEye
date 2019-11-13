@@ -2,7 +2,6 @@ package de.markusfisch.android.binaryeye.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.text.ClipboardManager
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,7 +20,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
-class DecodeFragment : Fragment() {
+class DecodeFragment : androidx.fragment.app.Fragment() {
 	private lateinit var contentView: EditText
 	private lateinit var formatView: TextView
 	private lateinit var hexView: TextView
@@ -158,8 +157,7 @@ class DecodeFragment : Fragment() {
 
 	private fun copyToClipboard(text: String) {
 		activity ?: return
-
-		val cm = activity.getSystemService(
+		val cm = activity?.getSystemService(
 			Context.CLIPBOARD_SERVICE
 		) as ClipboardManager
 		cm.text = text
@@ -171,8 +169,9 @@ class DecodeFragment : Fragment() {
 	}
 
 	private fun executeAction(content: ByteArray) {
-		if (activity != null && content.isNotEmpty()) scope.launch {
-			action.execute(activity, content)
+		val ac = activity ?: return
+		if (content.isNotEmpty()) scope.launch {
+			action.execute(ac, content)
 		}
 	}
 
@@ -204,7 +203,7 @@ class DecodeFragment : Fragment() {
 			content: String,
 			format: BarcodeFormat,
 			raw: ByteArray? = null
-		): Fragment {
+		): androidx.fragment.app.Fragment {
 			val args = Bundle()
 			args.putString(CONTENT, content)
 			args.putSerializable(FORMAT, format)

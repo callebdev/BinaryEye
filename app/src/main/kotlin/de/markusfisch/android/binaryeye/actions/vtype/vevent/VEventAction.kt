@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.CalendarContract
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import de.markusfisch.android.binaryeye.R
 import de.markusfisch.android.binaryeye.actions.IntentAction
 import de.markusfisch.android.binaryeye.actions.vtype.VTypeParser
@@ -21,8 +21,7 @@ object VEventAction : IntentAction() {
 		get() = R.string.vevent_failed
 
 	override fun canExecuteOn(data: ByteArray): Boolean {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH
-				&& VTypeParser.parseVType(String(data)) == "VEVENT"
+		return VTypeParser.parseVType(String(data)) == "VEVENT"
 	}
 
 	@RequiresApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)

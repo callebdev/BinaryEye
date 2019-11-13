@@ -4,9 +4,9 @@ import android.content.Context
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.AbsListView
 import de.markusfisch.android.binaryeye.R
@@ -47,24 +47,20 @@ fun setSystemAndToolBarTransparency(
 	val topColor = if (scrolled) opaqueColor else transparentColor
 	val bottomColor = if (scrolled || scrollable) opaqueColor else transparentColor
 	val activity = context as AppCompatActivity
-	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-		val window = activity.window
-		window.statusBarColor = topColor
-		window.navigationBarColor = bottomColor
-	}
+	val window = activity.window
+	window.statusBarColor = topColor
+	window.navigationBarColor = bottomColor
 	activity.supportActionBar?.setBackgroundDrawable(ColorDrawable(topColor))
 }
 
 fun initSystemBars(activity: AppCompatActivity) {
-	activity.findViewById(R.id.main_layout)?.also { view ->
+	activity.findViewById<View>(R.id.main_layout)?.also { view ->
 		setWindowInsetListener(view)
 	}
-	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-		activity.window.decorView.systemUiVisibility =
-			View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-					View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-					View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-	}
+	activity.window.decorView.systemUiVisibility =
+		View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+				View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 	setSystemAndToolBarTransparency(activity)
 }
 

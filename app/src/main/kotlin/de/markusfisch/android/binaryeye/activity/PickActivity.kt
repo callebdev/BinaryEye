@@ -6,10 +6,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import de.markusfisch.android.binaryeye.R
 import de.markusfisch.android.binaryeye.app.initSystemBars
@@ -30,7 +30,7 @@ class PickActivity : AppCompatActivity() {
 		setContentView(R.layout.activity_pick)
 		initSystemBars(this)
 
-		setSupportActionBar(findViewById(R.id.toolbar) as Toolbar)
+		setSupportActionBar(findViewById(R.id.toolbar))
 		supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 		supportFragmentManager.addOnBackStackChangedListener {
@@ -61,10 +61,10 @@ class PickActivity : AppCompatActivity() {
 			return
 		}
 
-		cropImageView = findViewById(R.id.image) as CropImageView
+		cropImageView = findViewById(R.id.image)
 		cropImageView.setImageBitmap(bitmap)
 
-		findViewById(R.id.scan).setOnClickListener {
+		findViewById<View>(R.id.scan).setOnClickListener {
 			val detail = crop(
 				bitmap,
 				cropImageView.normalizedRectInBounds,

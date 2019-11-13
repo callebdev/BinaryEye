@@ -3,7 +3,7 @@ package de.markusfisch.android.binaryeye.widget
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import de.markusfisch.android.binaryeye.R
 import de.markusfisch.android.binaryeye.app.windowInsets

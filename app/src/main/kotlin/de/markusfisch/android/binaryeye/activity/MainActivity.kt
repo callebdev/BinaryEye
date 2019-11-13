@@ -2,10 +2,8 @@ package de.markusfisch.android.binaryeye.activity
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
 import com.google.zxing.BarcodeFormat
 import de.markusfisch.android.binaryeye.R
 import de.markusfisch.android.binaryeye.app.initSystemBars
@@ -32,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 		setContentView(R.layout.activity_main)
 		initSystemBars(this)
 
-		setSupportActionBar(findViewById(R.id.toolbar) as Toolbar)
+		setSupportActionBar(findViewById(R.id.toolbar))
 		supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 		supportFragmentManager.addOnBackStackChangedListener {
@@ -92,13 +90,9 @@ class MainActivity : AppCompatActivity() {
 			val intent = Intent(context, MainActivity::class.java)
 			intent.putExtra(ENCODE, text)
 			if (isExternal) {
-				val flagActivityClearTask =
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-						Intent.FLAG_ACTIVITY_CLEAR_TASK
-					} else 0
 				intent.addFlags(
 					Intent.FLAG_ACTIVITY_NO_HISTORY or
-							flagActivityClearTask or
+							Intent.FLAG_ACTIVITY_CLEAR_TASK or
 							Intent.FLAG_ACTIVITY_NEW_TASK
 				)
 			}

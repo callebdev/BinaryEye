@@ -1,7 +1,7 @@
 package de.markusfisch.android.binaryeye.rs
 
 import android.content.Context
-import android.support.v8.renderscript.*
+import androidx.renderscript.*
 import de.markusfisch.android.binaryeye.renderscript.ScriptC_rotator
 import kotlin.math.roundToInt
 

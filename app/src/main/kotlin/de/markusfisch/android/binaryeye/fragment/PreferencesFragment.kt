@@ -1,8 +1,7 @@
 package de.markusfisch.android.binaryeye.fragment
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.SwitchCompat
+import androidx.appcompat.widget.SwitchCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,7 @@ import android.widget.EditText
 import de.markusfisch.android.binaryeye.R
 import de.markusfisch.android.binaryeye.app.prefs
 
-class PreferencesFragment : Fragment() {
+class PreferencesFragment : androidx.fragment.app.Fragment() {
 	private lateinit var useHistorySwitch: SwitchCompat
 	private lateinit var openWithUrlInput: EditText
 
@@ -27,12 +26,12 @@ class PreferencesFragment : Fragment() {
 			false
 		)
 
-		useHistorySwitch = view.findViewById<SwitchCompat>(R.id.use_history)
+		useHistorySwitch = view.findViewById(R.id.use_history)
 		if (prefs.useHistory) {
 			useHistorySwitch.toggle()
 		}
 
-		openWithUrlInput = view.findViewById<EditText>(R.id.open_with_url)
+		openWithUrlInput = view.findViewById(R.id.open_with_url)
 		openWithUrlInput.setText(prefs.openWithUrl)
 
 		return view

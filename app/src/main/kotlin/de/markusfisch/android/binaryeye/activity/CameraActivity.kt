@@ -8,8 +8,7 @@ import android.hardware.Camera
 import android.net.Uri
 import android.os.Bundle
 import android.os.Vibrator
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -67,6 +66,7 @@ class CameraActivity : AppCompatActivity() {
 		resultCode: Int,
 		resultData: Intent?
 	) {
+		super.onActivityResult(requestCode, resultCode, resultData)
 		when (requestCode) {
 			PICK_FILE_RESULT_CODE -> {
 				if (resultCode == Activity.RESULT_OK && resultData != null) {
@@ -84,12 +84,12 @@ class CameraActivity : AppCompatActivity() {
 		setContentView(R.layout.activity_camera)
 
 		initSystemBars(this)
-		setSupportActionBar(findViewById(R.id.toolbar) as Toolbar)
+		setSupportActionBar(findViewById(R.id.toolbar))
 
 		vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
-		cameraView = findViewById(R.id.camera_view) as CameraView
-		zoomBar = findViewById(R.id.zoom) as SeekBar
+		cameraView = findViewById(R.id.camera_view)
+		zoomBar = findViewById(R.id.zoom)
 		flashFab = findViewById(R.id.flash)
 		flashFab.setOnClickListener { toggleTorchMode() }
 
