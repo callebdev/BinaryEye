@@ -6,7 +6,6 @@ android {
 	buildToolsVersion build_tools_version
 
 	defaultConfig {
-		// check out the "legacy" branch for minSdkVersion 9 to 23
 		minSdkVersion 24
 		targetSdkVersion sdk_version
 
