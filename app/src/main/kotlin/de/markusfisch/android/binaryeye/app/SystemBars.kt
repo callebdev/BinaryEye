@@ -4,11 +4,11 @@ import android.content.Context
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
+import android.view.View
+import android.widget.AbsListView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.appcompat.app.AppCompatActivity
-import android.view.View
-import android.widget.AbsListView
 import de.markusfisch.android.binaryeye.R
 
 val windowInsets = Rect()

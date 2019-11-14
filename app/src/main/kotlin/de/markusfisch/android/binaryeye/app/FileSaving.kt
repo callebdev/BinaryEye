@@ -3,8 +3,8 @@ package de.markusfisch.android.binaryeye.app
 import android.app.Activity
 import android.content.Context
 import android.os.Environment
-import androidx.annotation.MainThread
 import android.widget.EditText
+import androidx.annotation.MainThread
 import de.markusfisch.android.binaryeye.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect

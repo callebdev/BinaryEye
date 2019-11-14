@@ -8,12 +8,12 @@ import android.hardware.Camera
 import android.net.Uri
 import android.os.Bundle
 import android.os.Vibrator
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.zxing.Result
 import com.google.zxing.ResultMetadataType
 import de.markusfisch.android.binaryeye.R

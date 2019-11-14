@@ -2,17 +2,17 @@ package de.markusfisch.android.binaryeye.fragment
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.fragment.app.Fragment
 import com.google.zxing.BarcodeFormat
 import de.markusfisch.android.binaryeye.R
 import de.markusfisch.android.binaryeye.app.addFragment
 
-class EncodeFragment : androidx.fragment.app.Fragment() {
+class EncodeFragment : Fragment() {
 	private lateinit var formatView: Spinner
 	private lateinit var sizeView: TextView
 	private lateinit var sizeBarView: SeekBar

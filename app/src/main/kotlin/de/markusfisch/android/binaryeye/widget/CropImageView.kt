@@ -3,8 +3,8 @@ package de.markusfisch.android.binaryeye.widget
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import androidx.core.content.ContextCompat
 import android.util.AttributeSet
+import androidx.core.content.ContextCompat
 import de.markusfisch.android.binaryeye.R
 import de.markusfisch.android.binaryeye.app.windowInsets
 import kotlin.math.roundToInt

@@ -1,15 +1,16 @@
 package de.markusfisch.android.binaryeye.fragment
 
 import android.os.Bundle
-import androidx.appcompat.widget.SwitchCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.widget.SwitchCompat
+import androidx.fragment.app.Fragment
 import de.markusfisch.android.binaryeye.R
 import de.markusfisch.android.binaryeye.app.prefs
 
-class PreferencesFragment : androidx.fragment.app.Fragment() {
+class PreferencesFragment : Fragment() {
 	private lateinit var useHistorySwitch: SwitchCompat
 	private lateinit var openWithUrlInput: EditText
 

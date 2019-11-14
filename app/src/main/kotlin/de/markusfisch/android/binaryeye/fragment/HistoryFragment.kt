@@ -3,11 +3,12 @@ package de.markusfisch.android.binaryeye.fragment
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import androidx.annotation.WorkerThread
-import androidx.appcompat.widget.SwitchCompat
 import android.view.*
 import android.widget.ListView
 import android.widget.Toast
+import androidx.annotation.WorkerThread
+import androidx.appcompat.widget.SwitchCompat
+import androidx.fragment.app.Fragment
 import com.google.zxing.BarcodeFormat
 import de.markusfisch.android.binaryeye.R
 import de.markusfisch.android.binaryeye.adapter.ScansAdapter
@@ -19,7 +20,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.mapNotNull
 
-class HistoryFragment : androidx.fragment.app.Fragment() {
+class HistoryFragment : Fragment() {
 	private lateinit var listView: ListView
 	private lateinit var fab: View
 	private lateinit var progressView: View

@@ -5,11 +5,11 @@ import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Environment
-import androidx.fragment.app.Fragment
 import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.google.zxing.BarcodeFormat
 import de.markusfisch.android.binaryeye.R
 import de.markusfisch.android.binaryeye.app.addSuffixIfNotGiven
@@ -23,7 +23,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class BarcodeFragment : androidx.fragment.app.Fragment() {
+class BarcodeFragment : Fragment() {
 	private var barcode: Bitmap? = null
 
 	override fun onCreate(state: Bundle?) {
