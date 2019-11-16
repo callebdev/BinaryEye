@@ -29,6 +29,7 @@
 	<string name="switch_camera">Switch camera</string>
 	<string name="history">History</string>
 	<string name="preferences">Preferences</string>
+	<string name="open_immediately">Skip inspection and open contents immediately</string>
 	<string name="use_history">Save scan history</string>
 	<string name="open_with_url">Open unknown data with URL</string>
 	<string name="really_remove_scan">Really remove scan?</string>
@@ -38,7 +39,7 @@
 	<string name="pick_list_separator">How to separate list items?</string>
 	<string name="separator_line_break">Line break</string>
 	<string name="separator_ruler">Ruler</string>
-	<string name="save_as_file_name">Save as file?</string>
+	<string name="save_as_file_name">Save as in Downloads file?</string>
 	<string name="file_name">File name</string>
 	<string name="error_saving_binary_data">Cannot save file</string>
 	<string name="error_file_exists">File already exists</string>
@@ -68,4 +69,5 @@
 	<string name="saved_in_downloads">Saved in downloads</string>
 	<string name="rotate_image_cw">Rotate image clockwise</string>
 	<string name="pick_file">Pick image file</string>
+	<string name="pick_code_to_scan">Pick code to scan</string>
 </resources>

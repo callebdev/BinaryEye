@@ -29,6 +29,7 @@
 	<string name="switch_camera">Kamera wechseln</string>
 	<string name="history">Gespeicherte Codes</string>
 	<string name="preferences">Einstellungen</string>
+	<string name="open_immediately">Inspektion überspringen und Inhalte sofort öffnen</string>
 	<string name="use_history">Codes speichern</string>
 	<string name="open_with_url">URL zum Öffnen unbekannter Daten</string>
 	<string name="really_remove_scan">Code wirklich entfernen?</string>
@@ -38,7 +39,7 @@
 	<string name="pick_list_separator">Wie sollen die Einträge getrennt werden?</string>
 	<string name="separator_line_break">Zeilenumbruch</string>
 	<string name="separator_ruler">Trennstrich</string>
-	<string name="save_as_file_name">Speichern als?</string>
+	<string name="save_as_file_name">Speichern in Downloads als?</string>
 	<string name="file_name">Dateiname</string>
 	<string name="error_saving_binary_data">Datei konnte nicht gespeichert werden</string>
 	<string name="error_file_exists">Datei existiert bereits</string>
@@ -68,4 +69,5 @@
 	<string name="saved_in_downloads">In den Downloads gespeichert</string>
 	<string name="rotate_image_cw">Bild im Uhrzeigersinn rotieren</string>
 	<string name="pick_file">Bilddatei auswählen</string>
+	<string name="pick_code_to_scan">Code im Bild auswählen</string>
 </resources>
