@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.*
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.zxing.BarcodeFormat
@@ -65,7 +64,7 @@ class BarcodeFragment : Fragment() {
 		imageView.setImageBitmap(barcode)
 		imageView.post {
 			// make sure to invoke this after ScalingImageView.onLayout()
-			imageView.setMinWidth(imageView.getMinWidth() / 2f)
+			imageView.minWidth /= 2f
 		}
 
 		view.findViewById<View>(R.id.share).setOnClickListener {
