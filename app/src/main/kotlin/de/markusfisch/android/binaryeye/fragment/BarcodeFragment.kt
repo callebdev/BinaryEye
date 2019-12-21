@@ -13,18 +13,23 @@ import com.google.zxing.BarcodeFormat
 import de.markusfisch.android.binaryeye.R
 import de.markusfisch.android.binaryeye.app.addSuffixIfNotGiven
 import de.markusfisch.android.binaryeye.app.hasWritePermission
+import de.markusfisch.android.binaryeye.app.setWindowInsetListener
 import de.markusfisch.android.binaryeye.app.shareFile
+import de.markusfisch.android.binaryeye.view.setPadding
+import de.markusfisch.android.binaryeye.widget.ConfinedScalingImageView
 import de.markusfisch.android.binaryeye.zxing.Zxing
-import de.markusfisch.android.scalingimageview.widget.ScalingImageView
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.*
 
 class BarcodeFragment : Fragment() {
 	private var barcode: Bitmap? = null
+	private var content: String = ""
+	private var format: BarcodeFormat? = null
 
 	override fun onCreate(state: Bundle?) {
 		super.onCreate(state)
@@ -59,8 +64,12 @@ class BarcodeFragment : Fragment() {
 			fragmentManager?.popBackStack()
 			return null
 		}
+		this.content = content
+		this.format = format
 
-		val imageView = view.findViewById<ScalingImageView>(R.id.barcode)
+		val imageView = view.findViewById<ConfinedScalingImageView>(
+			R.id.barcode
+		)
 		imageView.setImageBitmap(barcode)
 		imageView.post {
 			// make sure to invoke this after ScalingImageView.onLayout()
@@ -72,6 +81,11 @@ class BarcodeFragment : Fragment() {
 			bitmap?.let {
 				share(bitmap)
 			}
+		}
+
+		setWindowInsetListener { insets ->
+			(view.findViewById(R.id.inset_layout) as View).setPadding(insets)
+			imageView.insets.set(insets)
 		}
 
 		return view
@@ -97,6 +111,7 @@ class BarcodeFragment : Fragment() {
 		val ac = activity ?: return
 		val view = ac.layoutInflater.inflate(R.layout.dialog_save_file, null)
 		val editText = view.findViewById<EditText>(R.id.file_name)
+		editText.setText(encodeFileName("${format.toString()}_$content"))
 		AlertDialog.Builder(ac)
 			.setView(view)
 			.setPositiveButton(android.R.string.ok) { _, _ ->
@@ -201,3 +216,7 @@ private fun saveBitmap(bitmap: Bitmap, file: File): Boolean {
 		false
 	}
 }
+
+private val fileNameCharacters = "[^A-Za-z0-9]".toRegex()
+private fun encodeFileName(name: String): String =
+	fileNameCharacters.replace(name, "_").take(16).trim('_').toLowerCase(Locale.getDefault())

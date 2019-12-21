@@ -3,6 +3,9 @@ package de.markusfisch.android.binaryeye.fragment
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -12,11 +15,14 @@ import com.google.zxing.BarcodeFormat
 import de.markusfisch.android.binaryeye.R
 import de.markusfisch.android.binaryeye.app.addFragment
 import de.markusfisch.android.binaryeye.app.prefs
+import de.markusfisch.android.binaryeye.app.setWindowInsetListener
+import de.markusfisch.android.binaryeye.view.setPadding
 
 class EncodeFragment : Fragment() {
 	private lateinit var formatView: Spinner
 	private lateinit var sizeView: TextView
 	private lateinit var sizeBarView: SeekBar
+	private lateinit var contentView: EditText
 
 	private val writers = arrayListOf(
 		BarcodeFormat.AZTEC,
@@ -31,6 +37,11 @@ class EncodeFragment : Fragment() {
 		BarcodeFormat.QR_CODE,
 		BarcodeFormat.UPC_A
 	)
+
+	override fun onCreate(state: Bundle?) {
+		super.onCreate(state)
+		setHasOptionsMenu(true)
+	}
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -52,45 +63,34 @@ class EncodeFragment : Fragment() {
 			android.R.layout.simple_list_item_1,
 			writers.map { it.name }
 		)
-		if (state == null) {
-			formatView.post {
-				formatView.setSelection(prefs.indexOfLastSelectedFormat)
-			}
-		}
 
 		sizeView = view.findViewById(R.id.size_display)
 		sizeBarView = view.findViewById(R.id.size_bar)
 		initSizeBar()
 
-		val contentView = view.findViewById<EditText>(R.id.content)
+		contentView = view.findViewById<EditText>(R.id.content)
 
 		val args = arguments
-		args?.let {
-			contentView.setText(args.getString(CONTENT))
-			formatView.setSelection(
-				writers.indexOf(
-					args.getSerializable(FORMAT) as BarcodeFormat?
-				)
-			)
+		args?.also {
+			contentView.setText(it.getString(CONTENT))
+		}
+
+		val barcodeFormat = args?.getSerializable(FORMAT) as BarcodeFormat?
+		if (barcodeFormat != null) {
+			formatView.setSelection(writers.indexOf(barcodeFormat))
+		} else if (state == null) {
+			formatView.post {
+				formatView.setSelection(prefs.indexOfLastSelectedFormat)
+			}
 		}
 
 		view.findViewById<View>(R.id.encode).setOnClickListener { v ->
-			val format = writers[formatView.selectedItemPosition]
-			val size = getSize(sizeBarView.progress)
-			val content = contentView.text.toString()
-			if (content.isEmpty()) {
-				Toast.makeText(
-					v.context,
-					R.string.error_no_content,
-					Toast.LENGTH_SHORT
-				).show()
-			} else {
-				hideSoftKeyboard(contentView)
-				addFragment(
-					fragmentManager,
-					BarcodeFragment.newInstance(content, format, size)
-				)
-			}
+			encode()
+		}
+
+		setWindowInsetListener { insets ->
+			(view.findViewById(R.id.inset_layout) as View).setPadding(insets)
+			(view.findViewById(R.id.scroll_view) as View).setPadding(insets)
 		}
 
 		return view
@@ -99,6 +99,39 @@ class EncodeFragment : Fragment() {
 	override fun onPause() {
 		super.onPause()
 		prefs.indexOfLastSelectedFormat = formatView.selectedItemPosition
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		inflater.inflate(R.menu.fragment_encode, menu)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		return when (item.itemId) {
+			R.id.next -> {
+				encode()
+				true
+			}
+			else -> super.onOptionsItemSelected(item)
+		}
+	}
+
+	private fun encode() {
+		val format = writers[formatView.selectedItemPosition]
+		val size = getSize(sizeBarView.progress)
+		val content = contentView.text.toString()
+		if (content.isEmpty()) {
+			Toast.makeText(
+				context,
+				R.string.error_no_content,
+				Toast.LENGTH_SHORT
+			).show()
+		} else {
+			hideSoftKeyboard(contentView)
+			addFragment(
+				fragmentManager,
+				BarcodeFragment.newInstance(content, format, size)
+			)
+		}
 	}
 
 	private fun initSizeBar() {
@@ -141,11 +174,13 @@ class EncodeFragment : Fragment() {
 
 		fun newInstance(
 			content: String,
-			format: BarcodeFormat = BarcodeFormat.AZTEC
+			format: BarcodeFormat? = null
 		): Fragment {
 			val args = Bundle()
 			args.putString(CONTENT, content)
-			args.putSerializable(FORMAT, format)
+			format?.let {
+				args.putSerializable(FORMAT, format)
+			}
 			val fragment = EncodeFragment()
 			fragment.arguments = args
 			return fragment

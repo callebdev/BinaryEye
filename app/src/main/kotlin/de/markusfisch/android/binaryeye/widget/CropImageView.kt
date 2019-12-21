@@ -5,11 +5,12 @@ import android.graphics.*
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
 import de.markusfisch.android.binaryeye.R
-import de.markusfisch.android.binaryeye.app.windowInsets
 import kotlin.math.roundToInt
 
 class CropImageView(context: Context, attr: AttributeSet) :
 	ConfinedScalingImageView(context, attr) {
+	val windowInsets = Rect()
+
 	var onScan: (() -> Rect)? = null
 
 	private val boundsPaint = Paint(Paint.ANTI_ALIAS_FLAG)

@@ -1,25 +1,18 @@
-<RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:fitsSystemWindows="true">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 	<de.markusfisch.android.binaryeye.widget.CropImageView
 		android:id="@+id/image"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:contentDescription="@string/view_barcode"/>
-	<include layout="@layout/toolbar"/>
-	<com.google.android.material.floatingactionbutton.FloatingActionButton
-		tools:ignore="UnusedAttribute"
-		android:id="@+id/scan"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentEnd="true"
-		android:layout_alignParentBottom="true"
-		android:layout_margin="20dp"
-		android:contentDescription="@string/scan_code"
-		android:src="@drawable/ic_action_scan"
-		app:elevation="4dp"/>
-</RelativeLayout>
+	<androidx.coordinatorlayout.widget.CoordinatorLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:fitsSystemWindows="true">
+		<include layout="@layout/toolbar"/>
+		<com.google.android.material.floatingactionbutton.FloatingActionButton
+			style="@style/FAB"
+			android:id="@+id/scan"
+			android:contentDescription="@string/scan_code"
+			android:src="@drawable/ic_action_scan"/>
+	</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</merge>

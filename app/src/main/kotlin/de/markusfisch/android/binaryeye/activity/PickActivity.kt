@@ -12,37 +12,38 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.google.zxing.Result
 import de.markusfisch.android.binaryeye.R
+import de.markusfisch.android.binaryeye.app.colorSystemAndToolBars
 import de.markusfisch.android.binaryeye.app.initSystemBars
-import de.markusfisch.android.binaryeye.app.setSystemAndToolBarTransparency
+import de.markusfisch.android.binaryeye.app.setWindowInsetListener
+import de.markusfisch.android.binaryeye.app.setupInsets
 import de.markusfisch.android.binaryeye.graphics.crop
 import de.markusfisch.android.binaryeye.graphics.downsizeIfBigger
 import de.markusfisch.android.binaryeye.widget.CropImageView
 import de.markusfisch.android.binaryeye.zxing.Zxing
 import java.io.IOException
-import kotlin.math.min
 import kotlin.math.max
+import kotlin.math.min
 
 class PickActivity : AppCompatActivity() {
 	private val zxing = Zxing()
 
 	private lateinit var cropImageView: CropImageView
 
-	private var returnResult = false
-
 	override fun onCreate(state: Bundle?) {
 		super.onCreate(state)
 		setContentView(R.layout.activity_pick)
-		initSystemBars(this)
 
-		setSupportActionBar(findViewById(R.id.toolbar))
+		initSystemBars(this)
+		val toolbar = findViewById(R.id.toolbar) as Toolbar
+		setupInsets(findViewById(android.R.id.content), toolbar)
+		setSupportActionBar(toolbar)
 
 		supportFragmentManager.addOnBackStackChangedListener {
-			setSystemAndToolBarTransparency(this@PickActivity)
+			colorSystemAndToolBars(this@PickActivity)
 		}
-
-		returnResult = intent?.action == "com.google.zxing.client.android.SCAN"
 
 		val bitmap = if (
 			intent?.action == Intent.ACTION_SEND &&
@@ -111,6 +112,9 @@ class PickActivity : AppCompatActivity() {
 			}
 			rect
 		}
+		setWindowInsetListener { insets ->
+			cropImageView.windowInsets.set(insets)
+		}
 
 		findViewById<View>(R.id.scan).setOnClickListener {
 			scanImage(scanBounds())
@@ -159,7 +163,7 @@ class PickActivity : AppCompatActivity() {
 
 	private fun scanImage(result: Result?) {
 		if (result != null) {
-			showResult(this, result, returnResult)
+			showResult(this, result)
 			finish()
 			return
 		}

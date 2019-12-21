@@ -38,6 +38,7 @@ class CameraActivity : AppCompatActivity() {
 	private var preprocessor: Preprocessor? = null
 	private var invert = false
 	private var flash = false
+	private var returnResult = false
 	private var frontFacing = false
 	private var fallbackBuffer: IntArray? = null
 
@@ -113,6 +114,7 @@ class CameraActivity : AppCompatActivity() {
 	override fun onResume() {
 		super.onResume()
 		System.gc()
+		returnResult = "com.google.zxing.client.android.SCAN" == intent.action
 		if (hasCameraPermission(this, REQUEST_CAMERA)) {
 			openCamera()
 		}
@@ -274,7 +276,11 @@ class CameraActivity : AppCompatActivity() {
 						result?.let {
 							cameraView.post {
 								vibrator.vibrate(100)
-								showResult(this@CameraActivity, result)
+								showResult(
+									this@CameraActivity,
+									result,
+									returnResult
+								)
 							}
 							decoding = false
 						}

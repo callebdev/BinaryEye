@@ -1,17 +1,17 @@
 package de.markusfisch.android.binaryeye.app
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.view.View
 import android.widget.AbsListView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import de.markusfisch.android.binaryeye.R
 
-val windowInsets = Rect()
 val systemBarScrollListener = object : AbsListView.OnScrollListener {
 	override fun onScroll(
 		view: AbsListView,
@@ -25,8 +25,8 @@ val systemBarScrollListener = object : AbsListView.OnScrollListener {
 			val scrolled = firstVisibleItem > 0 ||
 					(totalItemCount > 0 && view.getChildAt(0).top < 0)
 			val scrollable = if (scrolled) true else totalItemCount > 0 &&
-					view.getChildAt(view.lastVisiblePosition).bottom > view.height
-			setSystemAndToolBarTransparency(view.context, scrolled, scrollable)
+					view.getChildAt(view.lastVisiblePosition).bottom >= view.height
+			colorSystemAndToolBars(view.context, scrolled, scrollable)
 		}
 	}
 
@@ -37,43 +37,67 @@ val systemBarScrollListener = object : AbsListView.OnScrollListener {
 	}
 }
 
-fun setSystemAndToolBarTransparency(
+fun initSystemBars(activity: AppCompatActivity) {
+	activity.window.decorView.systemUiVisibility =
+		View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+				View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+	colorSystemAndToolBars(activity)
+}
+
+fun colorSystemAndToolBars(
 	context: Context,
 	scrolled: Boolean = false,
 	scrollable: Boolean = false
 ) {
-	val opaqueColor = ContextCompat.getColor(context, R.color.primary)
-	val transparentColor = 0x00000000
-	val topColor = if (scrolled) opaqueColor else transparentColor
-	val bottomColor = if (scrolled || scrollable) opaqueColor else transparentColor
-	val activity = context as AppCompatActivity
+	val translucentColor = getTranslucentPrimaryColor(context)
+	val topColor = if (scrolled) translucentColor else 0
+	val bottomColor = if (scrolled || scrollable) translucentColor else 0
+	val activity = getAppCompatActivity(context) ?: return
 	val window = activity.window
 	window.statusBarColor = topColor
 	window.navigationBarColor = bottomColor
 	activity.supportActionBar?.setBackgroundDrawable(ColorDrawable(topColor))
 }
 
-fun initSystemBars(activity: AppCompatActivity) {
-	activity.findViewById<View>(R.id.main_layout)?.also { view ->
-		setWindowInsetListener(view)
+private fun getTranslucentPrimaryColor(context: Context) = ContextCompat.getColor(
+	context,
+	R.color.primary
+) and 0xffffff or 0xd8000000.toInt()
+
+private fun getAppCompatActivity(context: Context): AppCompatActivity? {
+	var ctx = context
+	while (ctx is ContextWrapper) {
+		if (ctx is AppCompatActivity) {
+			return ctx
+		}
+		ctx = ctx.baseContext ?: break
 	}
-	activity.window.decorView.systemUiVisibility =
-		View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-				View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-	setSystemAndToolBarTransparency(activity)
+	return null
 }
 
-private fun setWindowInsetListener(view: View) {
+private var windowInsetsListener: ((insets: Rect) -> Unit)? = null
+fun setWindowInsetListener(listener: (insets: Rect) -> Unit) {
+	if (windowInsets.top > 0) {
+		listener(windowInsets)
+	} else {
+		windowInsetsListener = listener
+	}
+}
+
+private val windowInsets = Rect()
+fun setupInsets(view: View, toolbar: Toolbar) {
+	val toolBarHeight = toolbar.layoutParams.height
 	ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
 		if (insets.hasSystemWindowInsets()) {
-			val left = insets.systemWindowInsetLeft
-			val top = insets.systemWindowInsetTop
-			val right = insets.systemWindowInsetRight
-			val bottom = insets.systemWindowInsetBottom
-			view.setPadding(left, top, right, bottom)
-			windowInsets.set(left, top, right, bottom)
+			windowInsets.set(
+				insets.systemWindowInsetLeft,
+				insets.systemWindowInsetTop + toolBarHeight,
+				insets.systemWindowInsetRight,
+				insets.systemWindowInsetBottom
+			)
+			windowInsetsListener?.also { it(windowInsets) }
 		}
-		insets.consumeSystemWindowInsets()
+		insets
 	}
 }
