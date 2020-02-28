@@ -8,8 +8,6 @@ import android.graphics.Rect
 import com.google.zxing.Result
 import com.google.zxing.ResultPoint
 import de.markusfisch.android.binaryeye.R
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.roundToInt
 
 class Candidates(context: Context) {
