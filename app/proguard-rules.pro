@@ -1,4 +1,4 @@
 -dontwarn com.google.**
--dontwarn android.support.v8.**
+-dontwarn androidx.**
 
--keep class android.support.v8.renderscript.** { *; }
+-keep class androidx.renderscript.** { *; }
