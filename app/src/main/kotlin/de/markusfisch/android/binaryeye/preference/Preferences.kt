@@ -17,6 +17,16 @@ class Preferences {
 			setBoolean(USE_HISTORY, value)
 			field = value
 		}
+	var ignoreConsecutiveDuplicates = false
+		set(value) {
+			setBoolean(IGNORE_CONSECUTIVE_DUPLICATES, value)
+			field = value
+		}
+	var showHexDump = true
+		set(value) {
+			setBoolean(SHOW_HEX_DUMP, value)
+			field = value
+		}
 	var openWithUrl: String = ""
 		set(value) {
 			setString(OPEN_WITH_URL, value)
@@ -39,6 +49,11 @@ class Preferences {
 			openImmediately
 		)
 		useHistory = preferences.getBoolean(USE_HISTORY, useHistory)
+		ignoreConsecutiveDuplicates = preferences.getBoolean(
+			IGNORE_CONSECUTIVE_DUPLICATES,
+			ignoreConsecutiveDuplicates
+		)
+		showHexDump = preferences.getBoolean(SHOW_HEX_DUMP, showHexDump)
 		indexOfLastSelectedFormat = preferences.getInt(
 			INDEX_OF_LAST_SELECTED_FORMAT,
 			indexOfLastSelectedFormat
@@ -69,6 +84,8 @@ class Preferences {
 	companion object {
 		const val OPEN_IMMEDIATELY = "open_immediately"
 		const val USE_HISTORY = "use_history"
+		const val IGNORE_CONSECUTIVE_DUPLICATES = "ignore_consecutive_duplicates"
+		const val SHOW_HEX_DUMP = "show_hex_dump"
 		const val OPEN_WITH_URL = "open_with_url"
 		const val INDEX_OF_LAST_SELECTED_FORMAT = "index_of_last_selected_format"
 	}
