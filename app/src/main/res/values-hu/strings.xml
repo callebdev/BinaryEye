@@ -10,6 +10,14 @@
 		<item quantity="one">%2$d karakter, %1$s</item>
 		<item quantity="other">%2$d karakter, %1$s</item>
 	</plurals>
+	<string name="error_correction_level">Error correction level</string>
+	<string name="issue_number">Issue number</string>
+	<string name="orientation">Orientation</string>
+	<string name="other_meta_data">Metadata</string>
+	<string name="pdf417_extra_metadata">PDF417 metadata</string>
+	<string name="possible_country">Possible country of manufacture</string>
+	<string name="suggested_price">Suggested price</string>
+	<string name="upc_ean_extension">UPC EAN extension</string>
 	<string name="toggle_flash">Vaku be- vagy kikapcsolása</string>
 	<string name="share">Megosztás</string>
 	<string name="copy_to_clipboard">Másolás a vágólapra</string>
@@ -32,6 +40,7 @@
 	<string name="open_immediately">Vizsgálat kihagyása és a tartalom azonnali megnyitása</string>
 	<string name="use_history">Beolvasási előzmények mentése</string>
 	<string name="ignore_consecutive_duplicates">Do not save consecutive duplicates</string>
+	<string name="show_meta_data">Show metadata</string>
 	<string name="show_hex_dump">Show hex dump</string>
 	<string name="open_with_url">Ismeretlen adat megnyitása URL-lel</string>
 	<string name="really_remove_scan">Valóban eltávolítja a beolvasást?</string>

@@ -6,6 +6,14 @@
 	<string name="decode_barcode">Декодировать штрих-код</string>
 	<string name="content">Текст</string>
 	<string name="binary_data">(двоичные данные)</string>
+	<string name="error_correction_level">Error correction level</string>
+	<string name="issue_number">Issue number</string>
+	<string name="orientation">Orientation</string>
+	<string name="other_meta_data">Metadata</string>
+	<string name="pdf417_extra_metadata">PDF417 metadata</string>
+	<string name="possible_country">Possible country of manufacture</string>
+	<string name="suggested_price">Suggested price</string>
+	<string name="upc_ean_extension">UPC EAN extension</string>
 	<string name="toggle_flash">Включить вспышку</string>
 	<string name="share">Отправить</string>
 	<string name="copy_to_clipboard">Скопировать в буфер обмена</string>
@@ -28,6 +36,7 @@
 	<string name="open_immediately">Skip inspection and open contents immediately</string>
 	<string name="use_history">Сохранить историю сканирования</string>
 	<string name="ignore_consecutive_duplicates">Do not save consecutive duplicates</string>
+	<string name="show_meta_data">Show metadata</string>
 	<string name="show_hex_dump">Show hex dump</string>
 	<string name="open_with_url">Открыть неизвестные данные с помощью URL</string>
 	<string name="really_remove_scan">Действительно удалить сканирование?</string>

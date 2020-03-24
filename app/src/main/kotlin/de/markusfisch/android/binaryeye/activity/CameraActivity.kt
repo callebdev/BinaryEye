@@ -23,6 +23,7 @@ import de.markusfisch.android.binaryeye.app.initSystemBars
 import de.markusfisch.android.binaryeye.app.prefs
 import de.markusfisch.android.binaryeye.graphics.Mapping
 import de.markusfisch.android.binaryeye.graphics.frameToView
+import de.markusfisch.android.binaryeye.repository.Scan
 import de.markusfisch.android.binaryeye.rs.Preprocessor
 import de.markusfisch.android.binaryeye.widget.DetectorView
 import de.markusfisch.android.binaryeye.zxing.Zxing
@@ -210,13 +211,19 @@ class CameraActivity : AppCompatActivity() {
 	}
 
 	private fun openReadme() {
-		startActivity(
-			Intent(
-				Intent.ACTION_VIEW, Uri.parse(
-					"https://github.com/markusfisch/BinaryEye/blob/master/README.md"
-				)
-			)
+		val intent = Intent(
+			Intent.ACTION_VIEW,
+			Uri.parse(getString(R.string.project_url))
 		)
+		if (intent.resolveActivity(packageManager) != null) {
+			startActivity(intent)
+		} else {
+			Toast.makeText(
+				this,
+				R.string.project_url,
+				Toast.LENGTH_LONG
+			).show()
+		}
 	}
 
 	private fun handleSendText(intent: Intent) {
@@ -290,10 +297,10 @@ class CameraActivity : AppCompatActivity() {
 								)
 							}
 							cameraView.post {
-								mapping?.let {
-									detectorView.mark(
-										it.map(result.resultPoints)
-									)
+								val rp = result.resultPoints
+								val m = mapping
+								if (m != null && rp != null) {
+									detectorView.mark(m.map(rp))
 								}
 								vibrator.vibrate(100)
 								showResult(
@@ -425,15 +432,10 @@ fun showResult(
 	result: Result,
 	isResult: Boolean = false
 ) {
-	val rawBytes = getRawBytes(result)
+	val scan = Scan(result)
 	if (prefs.useHistory) {
 		GlobalScope.launch {
-			db.insertScan(
-				System.currentTimeMillis(),
-				result.text,
-				rawBytes,
-				result.barcodeFormat.toString()
-			)
+			db.insertScan(scan)
 		}
 	}
 	if (isResult) {
@@ -441,27 +443,9 @@ fun showResult(
 		activity.finish()
 	} else {
 		activity.startActivity(
-			MainActivity.getDecodeIntent(
-				activity,
-				result.text,
-				result.barcodeFormat,
-				rawBytes
-			)
+			MainActivity.getDecodeIntent(activity, scan)
 		)
 	}
-}
-
-fun getRawBytes(result: Result): ByteArray? {
-	val metadata = result.resultMetadata ?: return null
-	val segments = metadata[ResultMetadataType.BYTE_SEGMENTS] ?: return null
-	var bytes = ByteArray(0)
-	@Suppress("UNCHECKED_CAST")
-	for (seg in segments as Iterable<ByteArray>) {
-		bytes += seg
-	}
-	// byte segments can never be shorter than the text.
-	// Zxing cuts off content prefixes like "WIFI:"
-	return if (bytes.size >= result.text.length) bytes else null
 }
 
 fun getReturnIntent(result: Result): Intent {
@@ -474,34 +458,29 @@ fun getReturnIntent(result: Result): Intent {
 	if (result.rawBytes?.isNotEmpty() == true) {
 		intent.putExtra("SCAN_RESULT_BYTES", result.rawBytes)
 	}
-	val metadata = result.resultMetadata
-	metadata?.let {
-		val orientation = metadata[ResultMetadataType.UPC_EAN_EXTENSION]
-		orientation?.let {
+	result.resultMetadata?.let { metadata ->
+		metadata[ResultMetadataType.UPC_EAN_EXTENSION]?.let {
 			intent.putExtra(
 				"SCAN_RESULT_ORIENTATION",
-				orientation.toString()
+				it.toString()
 			)
 		}
-		val ecLevel = metadata[ResultMetadataType.ERROR_CORRECTION_LEVEL]
-		ecLevel?.let {
+		metadata[ResultMetadataType.ERROR_CORRECTION_LEVEL]?.let {
 			intent.putExtra(
 				"SCAN_RESULT_ERROR_CORRECTION_LEVEL",
-				ecLevel.toString()
+				it.toString()
 			)
 		}
-		val upcEanExtension = metadata[ResultMetadataType.UPC_EAN_EXTENSION]
-		upcEanExtension?.let {
+		metadata[ResultMetadataType.UPC_EAN_EXTENSION]?.let {
 			intent.putExtra(
 				"SCAN_RESULT_UPC_EAN_EXTENSION",
-				upcEanExtension.toString()
+				it.toString()
 			)
 		}
-		val segments = metadata[ResultMetadataType.BYTE_SEGMENTS]
-		segments?.let {
+		metadata[ResultMetadataType.BYTE_SEGMENTS]?.let {
 			var i = 0
 			@Suppress("UNCHECKED_CAST")
-			for (seg in segments as Iterable<ByteArray>) {
+			for (seg in it as Iterable<ByteArray>) {
 				intent.putExtra("SCAN_RESULT_BYTE_SEGMENTS_$i", seg)
 				++i
 			}

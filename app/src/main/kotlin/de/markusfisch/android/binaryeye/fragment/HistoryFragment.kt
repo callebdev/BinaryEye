@@ -16,7 +16,7 @@ import de.markusfisch.android.binaryeye.R
 import de.markusfisch.android.binaryeye.adapter.ScansAdapter
 import de.markusfisch.android.binaryeye.app.*
 import de.markusfisch.android.binaryeye.data.csv.csvBuilder
-import de.markusfisch.android.binaryeye.repository.DatabaseRepository
+import de.markusfisch.android.binaryeye.repository.Scan
 import de.markusfisch.android.binaryeye.view.setPadding
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
@@ -159,14 +159,10 @@ class HistoryFragment : Fragment() {
 		try {
 			addFragment(
 				fragmentManager,
-				DecodeFragment.newInstance(
-					scan.content,
-					BarcodeFormat.valueOf(scan.format),
-					scan.raw
-				)
+				DecodeFragment.newInstance(scan)
 			)
 		} catch (e: IllegalArgumentException) {
-			// shouldn't ever happen
+			// ignore, can never happen
 		}
 	}
 
@@ -225,7 +221,7 @@ class HistoryFragment : Fragment() {
 				}
 			} ?: return@useVisibility
 			val name = withContext(Dispatchers.Main) {
-				ac.askForFileName(suffix = "csv")
+				ac.askForFileName(suffix = ".csv")
 			} ?: return@useVisibility
 			val csv = scans.toCSV(delimiter, getBinaries)
 			val toastMessage = csv.writeToFile(name)
@@ -239,11 +235,11 @@ class HistoryFragment : Fragment() {
 		}
 	}
 
-	private fun Flow<DatabaseRepository.Scan>.toCSV(
+	private fun Flow<Scan>.toCSV(
 		delimiter: String,
 		allowBinary: Boolean
 	): Flow<ByteArray> {
-		return csvBuilder<DatabaseRepository.Scan> {
+		return csvBuilder<Scan> {
 			column {
 				name = "DATE"
 				gettingByString { it.timestamp }
@@ -260,6 +256,38 @@ class HistoryFragment : Fragment() {
 				isBinary = true
 				name = "BINARY_CONTENT"
 				gettingBy { it.raw ?: ByteArray(0) }
+			}
+			column {
+				name = "ERROR_CORRECTION_LEVEL"
+				gettingByString { it.errorCorrectionLevel }
+			}
+			column {
+				name = "ISSUE_NUMBER"
+				gettingByString { it.issueNumber }
+			}
+			column {
+				name = "ORIENTATION"
+				gettingByString { it.orientation }
+			}
+			column {
+				name = "OTHER"
+				gettingByString { it.otherMetaData }
+			}
+			column {
+				name = "PDF417_EXTRA_METADATA"
+				gettingByString { it.pdf417ExtraMetaData }
+			}
+			column {
+				name = "POSSIBLE_COUNTRY"
+				gettingByString { it.possibleCountry }
+			}
+			column {
+				name = "SUGGESTED_PRICE"
+				gettingByString { it.suggestedPrice }
+			}
+			column {
+				name = "UPC_EAN_EXTENSION"
+				gettingByString { it.upcEanExtension }
 			}
 		}.buildWith(this, delimiter)
 	}
@@ -298,7 +326,7 @@ class HistoryFragment : Fragment() {
 	@WorkerThread
 	private suspend inline fun getScans(
 		crossinline binaryData: suspend () -> Boolean?
-	): Pair<Boolean, Flow<DatabaseRepository.Scan>>? {
+	): Pair<Boolean, Flow<Scan>>? {
 		val getBinaries: Boolean = db.hasBinaryData() && binaryData() ?: return null
 		return getBinaries to db.getScans().mapNotNull {
 			when {
